@@ -5,14 +5,14 @@
 # Source0 file verified with key 0x3DBFB6882C9358FB (info@kdab.com)
 #
 Name     : kdsoap
-Version  : 1.9.0
-Release  : 1
-URL      : https://github.com/KDAB/KDSoap/releases/download/kdsoap-1.9.0/kdsoap-1.9.0.tar.gz
-Source0  : https://github.com/KDAB/KDSoap/releases/download/kdsoap-1.9.0/kdsoap-1.9.0.tar.gz
-Source1  : https://github.com/KDAB/KDSoap/releases/download/kdsoap-1.9.0/kdsoap-1.9.0.tar.gz.asc
-Summary  : Qt-based client-side and server-side SOAP component
+Version  : 1.10.0
+Release  : 2
+URL      : https://github.com/KDAB/KDSoap/releases/download/kdsoap-1.10.0/kdsoap-1.10.0.tar.gz
+Source0  : https://github.com/KDAB/KDSoap/releases/download/kdsoap-1.10.0/kdsoap-1.10.0.tar.gz
+Source1  : https://github.com/KDAB/KDSoap/releases/download/kdsoap-1.10.0/kdsoap-1.10.0.tar.gz.asc
+Summary  : A Qt5-based client-side and server-side SOAP component
 Group    : Development/Tools
-License  : BSD-3-Clause GPL-2.0+
+License  : BSD-3-Clause GPL-2.0-only GPL-3.0-only LGPL-2.1-only LGPL-3.0-only
 Requires: kdsoap-bin = %{version}-%{release}
 Requires: kdsoap-data = %{version}-%{release}
 Requires: kdsoap-lib = %{version}-%{release}
@@ -20,6 +20,8 @@ Requires: kdsoap-license = %{version}-%{release}
 BuildRequires : buildreq-cmake
 BuildRequires : buildreq-kde
 BuildRequires : buildreq-qmake
+BuildRequires : qtbase-dev
+BuildRequires : qtbase-dev mesa-dev
 
 %description
 KDSoap can be used to create client applications for web services
@@ -56,7 +58,6 @@ Requires: kdsoap-bin = %{version}-%{release}
 Requires: kdsoap-data = %{version}-%{release}
 Provides: kdsoap-devel = %{version}-%{release}
 Requires: kdsoap = %{version}-%{release}
-Requires: kdsoap = %{version}-%{release}
 
 %description dev
 dev components for the kdsoap package.
@@ -89,35 +90,35 @@ license components for the kdsoap package.
 
 
 %prep
-%setup -q -n kdsoap-1.9.0
-cd %{_builddir}/kdsoap-1.9.0
+%setup -q -n kdsoap-1.10.0
+cd %{_builddir}/kdsoap-1.10.0
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1587737572
+export SOURCE_DATE_EPOCH=1610133866
 mkdir -p clr-build
 pushd clr-build
-# -Werror is for werrorists
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
 export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
-export FCFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
-export FFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FCFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
 export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
 %cmake ..
-make  %{?_smp_mflags}  VERBOSE=1
+make  %{?_smp_mflags}
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1587737572
+export SOURCE_DATE_EPOCH=1610133866
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/kdsoap
-cp %{_builddir}/kdsoap-1.9.0/cmake/COPYING-CMAKE-SCRIPTS %{buildroot}/usr/share/package-licenses/kdsoap/ff3ed70db4739b3c6747c7f624fe2bad70802987
+cp %{_builddir}/kdsoap-1.10.0/LICENSES/BSD-3-Clause.txt %{buildroot}/usr/share/package-licenses/kdsoap/9950d3fdce1cff1f71212fb5abd31453c6ee2f8c
+cp %{_builddir}/kdsoap-1.10.0/cmake/COPYING-CMAKE-SCRIPTS %{buildroot}/usr/share/package-licenses/kdsoap/ff3ed70db4739b3c6747c7f624fe2bad70802987
 pushd clr-build
 %make_install
 popd
@@ -195,20 +196,33 @@ popd
 /usr/lib64/cmake/KDSoap/KDSoapTargets.cmake
 /usr/lib64/libkdsoap-server.so
 /usr/lib64/libkdsoap.so
+/usr/lib64/qt5/mkspecs/modules/qt_KDSoapClient.pri
+/usr/lib64/qt5/mkspecs/modules/qt_KDSoapServer.pri
 
 %files doc
 %defattr(0644,root,root,0755)
-/usr/share/doc/KDSoap/LICENSE.GPL.txt
-/usr/share/doc/KDSoap/LICENSE.txt
+/usr/share/doc/KDSoap/LICENSES/BSD-3-Clause.txt
+/usr/share/doc/KDSoap/LICENSES/GPL-2.0-only.txt
+/usr/share/doc/KDSoap/LICENSES/GPL-3.0-only.txt
+/usr/share/doc/KDSoap/LICENSES/LGPL-2.0-or-later.txt
+/usr/share/doc/KDSoap/LICENSES/LGPL-2.1-only.txt
+/usr/share/doc/KDSoap/LICENSES/LGPL-3.0-only.txt
+/usr/share/doc/KDSoap/LICENSES/LicenseRef-KDAB-KDSoap-AGPL3-Modified.txt
+/usr/share/doc/KDSoap/LICENSES/LicenseRef-KDAB-KDSoap-US.txt
+/usr/share/doc/KDSoap/LICENSES/LicenseRef-KDAB-KDSoap.txt
+/usr/share/doc/KDSoap/README-commercial.txt
 /usr/share/doc/KDSoap/README.txt
 /usr/share/doc/KDSoap/kdsoap.pri
 /usr/share/doc/KDSoap/kdwsdl2cpp.pri
 
 %files lib
 %defattr(-,root,root,-)
-/usr/lib64/libkdsoap-server.so.1.9.0
-/usr/lib64/libkdsoap.so.1.9.0
+/usr/lib64/libkdsoap-server.so.1
+/usr/lib64/libkdsoap-server.so.1.10.0
+/usr/lib64/libkdsoap.so.1
+/usr/lib64/libkdsoap.so.1.10.0
 
 %files license
 %defattr(0644,root,root,0755)
+/usr/share/package-licenses/kdsoap/9950d3fdce1cff1f71212fb5abd31453c6ee2f8c
 /usr/share/package-licenses/kdsoap/ff3ed70db4739b3c6747c7f624fe2bad70802987
