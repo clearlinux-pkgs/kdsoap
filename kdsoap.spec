@@ -5,14 +5,14 @@
 # Source0 file verified with key 0x3DBFB6882C9358FB (info@kdab.com)
 #
 Name     : kdsoap
-Version  : 2.0.0
-Release  : 3
-URL      : https://github.com/KDAB/KDSoap/releases/download/kdsoap-2.0.0/kdsoap-2.0.0.tar.gz
-Source0  : https://github.com/KDAB/KDSoap/releases/download/kdsoap-2.0.0/kdsoap-2.0.0.tar.gz
-Source1  : https://github.com/KDAB/KDSoap/releases/download/kdsoap-2.0.0/kdsoap-2.0.0.tar.gz.asc
+Version  : 2.1.0
+Release  : 4
+URL      : https://github.com/KDAB/KDSoap/releases/download/kdsoap-2.1.0/kdsoap-2.1.0.tar.gz
+Source0  : https://github.com/KDAB/KDSoap/releases/download/kdsoap-2.1.0/kdsoap-2.1.0.tar.gz
+Source1  : https://github.com/KDAB/KDSoap/releases/download/kdsoap-2.1.0/kdsoap-2.1.0.tar.gz.asc
 Summary  : A Qt6-based client-side and server-side SOAP component
 Group    : Development/Tools
-License  : BSD-3-Clause GPL-2.0 GPL-2.0-only GPL-3.0-only LGPL-2.0 LGPL-2.1 LGPL-2.1-only LGPL-3.0-only
+License  : BSD-3-Clause GPL-2.0 MIT
 Requires: kdsoap-bin = %{version}-%{release}
 Requires: kdsoap-data = %{version}-%{release}
 Requires: kdsoap-lib = %{version}-%{release}
@@ -21,8 +21,9 @@ BuildRequires : buildreq-cmake
 BuildRequires : buildreq-kde
 BuildRequires : buildreq-qmake
 BuildRequires : doxygen
-BuildRequires : qtbase-dev
+BuildRequires : qt6base-dev
 BuildRequires : qtbase-dev mesa-dev
+BuildRequires : texlive
 
 %description
 KDSoap can be used to create client applications for web services
@@ -91,37 +92,36 @@ license components for the kdsoap package.
 
 
 %prep
-%setup -q -n kdsoap-2.0.0
-cd %{_builddir}/kdsoap-2.0.0
+%setup -q -n kdsoap-2.1.0
+cd %{_builddir}/kdsoap-2.1.0
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1625160394
+export SOURCE_DATE_EPOCH=1662992430
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
-export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
-export FCFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
-export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
-export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
+export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=auto "
+export FCFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=auto "
+export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=auto "
+export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=auto "
 %cmake ..
 make  %{?_smp_mflags}
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1625160394
+export SOURCE_DATE_EPOCH=1662992430
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/kdsoap
-cp %{_builddir}/kdsoap-2.0.0/LICENSES/BSD-3-Clause.txt %{buildroot}/usr/share/package-licenses/kdsoap/9950d3fdce1cff1f71212fb5abd31453c6ee2f8c
-cp %{_builddir}/kdsoap-2.0.0/LICENSES/GPL-2.0-only.txt %{buildroot}/usr/share/package-licenses/kdsoap/3e8971c6c5f16674958913a94a36b1ea7a00ac46
-cp %{_builddir}/kdsoap-2.0.0/LICENSES/LGPL-2.0-or-later.txt %{buildroot}/usr/share/package-licenses/kdsoap/a4c60b3fefda228cd7439d3565df043192fef137
-cp %{_builddir}/kdsoap-2.0.0/LICENSES/LGPL-2.1-only.txt %{buildroot}/usr/share/package-licenses/kdsoap/81b58c89ceef8e9f8bd5d00a287edbd15f9d3567
+cp %{_builddir}/kdsoap-%{version}/LICENSES/BSD-3-Clause.txt %{buildroot}/usr/share/package-licenses/kdsoap/9950d3fdce1cff1f71212fb5abd31453c6ee2f8c || :
+cp %{_builddir}/kdsoap-%{version}/LICENSES/GPL-2.0-only.txt %{buildroot}/usr/share/package-licenses/kdsoap/3cb34cfc72e87654683f2894299adf912d14b284 || :
+cp %{_builddir}/kdsoap-%{version}/LICENSES/MIT.txt %{buildroot}/usr/share/package-licenses/kdsoap/adadb67a9875aeeac285309f1eab6e47d9ee08a7 || :
 pushd clr-build
 %make_install
 popd
@@ -207,28 +207,25 @@ popd
 %defattr(0644,root,root,0755)
 /usr/share/doc/KDSoap/LICENSES/BSD-3-Clause.txt
 /usr/share/doc/KDSoap/LICENSES/GPL-2.0-only.txt
-/usr/share/doc/KDSoap/LICENSES/GPL-3.0-only.txt
-/usr/share/doc/KDSoap/LICENSES/LGPL-2.0-or-later.txt
-/usr/share/doc/KDSoap/LICENSES/LGPL-2.1-only.txt
-/usr/share/doc/KDSoap/LICENSES/LGPL-3.0-only.txt
-/usr/share/doc/KDSoap/LICENSES/LicenseRef-KDAB-KDSoap-AGPL3-Modified.txt
-/usr/share/doc/KDSoap/LICENSES/LicenseRef-KDAB-KDSoap-US.txt
-/usr/share/doc/KDSoap/LICENSES/LicenseRef-KDAB-KDSoap.txt
-/usr/share/doc/KDSoap/README-commercial.txt
-/usr/share/doc/KDSoap/README.txt
+/usr/share/doc/KDSoap/LICENSES/LicenseRef-Microsoft.txt
+/usr/share/doc/KDSoap/LICENSES/LicenseRef-Novell.txt
+/usr/share/doc/KDSoap/LICENSES/LicenseRef-OASIS.txt
+/usr/share/doc/KDSoap/LICENSES/LicenseRef-SportingExchange.txt
+/usr/share/doc/KDSoap/LICENSES/MIT.txt
+/usr/share/doc/KDSoap/LICENSES/W3C.txt
+/usr/share/doc/KDSoap/README.md
 /usr/share/doc/KDSoap/kdsoap.pri
 /usr/share/doc/KDSoap/kdwsdl2cpp.pri
 
 %files lib
 %defattr(-,root,root,-)
 /usr/lib64/libkdsoap-server.so.2
-/usr/lib64/libkdsoap-server.so.2.0.0
+/usr/lib64/libkdsoap-server.so.2.1.0
 /usr/lib64/libkdsoap.so.2
-/usr/lib64/libkdsoap.so.2.0.0
+/usr/lib64/libkdsoap.so.2.1.0
 
 %files license
 %defattr(0644,root,root,0755)
-/usr/share/package-licenses/kdsoap/3e8971c6c5f16674958913a94a36b1ea7a00ac46
-/usr/share/package-licenses/kdsoap/81b58c89ceef8e9f8bd5d00a287edbd15f9d3567
+/usr/share/package-licenses/kdsoap/3cb34cfc72e87654683f2894299adf912d14b284
 /usr/share/package-licenses/kdsoap/9950d3fdce1cff1f71212fb5abd31453c6ee2f8c
-/usr/share/package-licenses/kdsoap/a4c60b3fefda228cd7439d3565df043192fef137
+/usr/share/package-licenses/kdsoap/adadb67a9875aeeac285309f1eab6e47d9ee08a7
